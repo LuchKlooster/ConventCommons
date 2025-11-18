@@ -2,8 +2,8 @@
 Convent Commons for Mendix
 
 Module content:
-. DataGrid2, auto select (first) row
-. EnumReflection, opens full potential of enums
+- DataGrid2, auto select (first) row
+- EnumReflection, opens full potential of enums
 
 Shorthand implementation guide.
 1. Import module ConventCommons.mpk in your app.
