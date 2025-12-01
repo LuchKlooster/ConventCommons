@@ -1,4 +1,5 @@
 # ConventCommons
+
 Convent Commons for Mendix
 
 ## Module Content
@@ -124,7 +125,7 @@ The solution consists of four components:
    - `.tr:nth-child({datagrid2Row})` to locate the row
    - `.clickable` to locate the first clickable element in the row
 
-### Configuration in Mendix Studio Pro
+### Configuration of Auto-Select Row in Mendix Studio Pro
 
 #### Nanoflow: NF_DG2_SelectRow
 
@@ -133,7 +134,8 @@ The solution consists of four components:
 | datagrid2Name | String | Name of the DataGrid2 (without "mx-name-" prefix)  |
 | datagrid2Row  | String | Row number to select (typically "1" for first row) |
 
-**Nanoflow Setup**
+#### Nanoflow Setup
+
 Create a nanoflow named `NF_DG2_SelectRow` that:
 
 1. Accepts the same parameters as the JavaScript Action
@@ -142,7 +144,8 @@ Create a nanoflow named `NF_DG2_SelectRow` that:
 
 ### Use Cases
 
-**1. Page Load Event**
+#### 1. Page Load Event
+
 Use a Page Event widget (from Marketplace) to trigger selection when a page opens.
 
 Configuration:
@@ -153,7 +156,8 @@ Configuration:
   - `datagrid2Name`: Enter grid name (e.g., "myDataGrid")
   - `datagrid2Row`: "1" (or desired row number)
 
-**2. Master-Detail Grids**
+#### 2. Master-Detail Grids
+
 When a DataGrid2 listens to another grid (master-detail pattern).
 
 Configuration:
@@ -163,7 +167,8 @@ Configuration:
 - **Action:** Call nanoflow `NF_DG2_SelectRow`
 - **Target:** Detail grid name
 
-**3. Dropdown/Combobox Filtering**
+#### 3. Dropdown/Combobox Filtering
+
 When a DataGrid2 is filtered by a dropdown selection.
 
 Configuration:
@@ -178,7 +183,7 @@ Configuration:
 ## DataGrid2: Get Filtered List
 
 When a microflow or nanoflow is called via a button in a datagrid, there is only one option to pass data from the grid as a parameter:
- 'Selection of <GridName>' - the selected rows from the grid.
+ 'Selection of >GridName<' - the selected rows from the grid.
 
 However, sometimes it's desirable to retrieve not the selected rows, but the filtered data in the called flow.
 This is now possible by calling the JavaScript Action `JS_DG2_GetFilteredList`.
@@ -187,11 +192,12 @@ This is now possible by calling the JavaScript Action `JS_DG2_GetFilteredList`.
 In the client, only data from the displayed page is available.
 This limitation can be circumvented by setting Pagination to 'Virtual scrolling' and making the page length larger than the expected number of rows.
 In other words, all rows must fit on one page.
+
 As result a list of MxObjects of type used in the DataGrid2 is desired. So we have to explicit name the entity type.
 That forces us to make a copy of the JavaScript Action.
 No code changes are required, just the choice of entity type.
 
-### Configuration in Mendix Studio Pro
+### Configuration of Get Filtered List in Mendix Studio Pro
 
 1. Create a copy of the template JavascriptAction `JS_DG2_GetFilteredList`.
 2. Place the copy in your own module.
