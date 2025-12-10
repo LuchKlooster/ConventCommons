@@ -4,9 +4,9 @@ Convent Commons for Mendix
 
 ## Module Content
 
-- **EnumReflection** - Unlocks the full potential of enums
-- **DataGrid2** - Auto-select (first) row
-- **DataGrid2** - Get filtered list
+- [**EnumReflection**](#enumreflection) - Unlocks the full potential of enums
+- [**DataGrid2 - Auto-select (first) row**](#datagrid2-auto-select-row)
+- [**DataGrid2 - Get filtered list**](#datagrid2-get-filtered-list)
 
 ## Quick Implementation Guide
 
@@ -17,30 +17,31 @@ Convent Commons for Mendix
 5. You're ready to use the microflows, nanoflows, and Java/JavaScript Actions in the Enumerations folders.
 
 ---
+---
 
 ## EnumReflection
 
 Over the years, questions about enumerations have regularly appeared on the forum, along with answers providing partial solutions:
 
-- CommunityCommons offers a template that requires a customized Java version for each enum.
-- There's a StringToEnum JavaAction available.
+- CommunityCommons offers a template (EnumerationFromString) that requires a customized Java version for each enum.
+- There's module EnumToList. This module allows to transform an enumeration (as object attribute) into a list of object in order to iterate with a loop.
 - ModelReflection contains enum data, but not all aspects are included.
+- All enum information can be found in the MetaData. Unfortunately, in recent Mendix versions, this data is not available in the client (JavaScript).
 
-All enum information can be found in the MetaData. Unfortunately, in recent Mendix versions, this data is not available in the client (JavaScript).
-
-I searched for the most low-code solution possible and came up with the idea of EnumReflection.
+So the (partly)solutions are scattered over a handfull of modules and require high-code alterations.
+I searched for the most low-code solution possible and came up with the idea of EnumReflection.  
 
 ### How It Works
 
 In an after start-up microflow (`ASU_EnumReflection`), the JavaAction `CreateMxObjectEnum` is executed. This JavaAction searches the MetaData and stores the found data in the entities `MxObjectEnum`, `MxObjectEnumValue`, and `MxObjectEnumCaption`.
 
-These entities, attributes, and associations can be used directly—they are normal Mendix objects. Convenience microflows and nanoflows are also available to query this data. Additionally, there are two Java and JavaScript Actions to modify enum values in an object. For those who want to view the data, there's a page called `Enumerations_Overview`.
+These entities, attributes, and associations can be used directly—they are normal Mendix objects. Convenience microflows and nanoflows are also available to query this data. Additionally, there are Java and JavaScript Actions to modify enum values in an object. For those who want to view the data, there's a page called `Enumerations_Overview`.
 
 ### Query Functions
 
 #### GetEnumValues
 
-- **Parameters:**  
+- **Parameter:**
   - `EnumName` - Full enum name (module.enumname like system.language)
 - **Result:** List of `MxObjectEnumValue` with all values of the requested enum
 - **Purpose:** To loop over all values of the enum. In the iteration, all data is available in the attributes of `MxObjectEnumValue`
@@ -89,10 +90,17 @@ These entities, attributes, and associations can be used directly—they are nor
 
 - **Parameters:**
   - `ObjectToChange` - MxObject
+  - `EnumName` - Full enum name (module.enumname like system.language)
   - `AttributeName` - as string
   - `ValueAsString` - Caption as string
 - **Result:** Attribute in Object receives the enum value corresponding to Value
 
+**Note:**
+For the Enum Mutation Functions it is necessary to make a copy of the template function.
+In the copied function you need to replace the placeholder entity (MxObject System.User) with the entity that has the enum to change as an attribute.
+This is because the Mendix Modeler cannot handle abstract entities, but wants an explicit entity.
+
+---
 ---
 
 ## DataGrid2: Auto-Select Row
@@ -179,6 +187,7 @@ Configuration:
 - **Target:** Filtered grid name
 
 ---
+---
 
 ## DataGrid2: Get Filtered List
 
@@ -195,7 +204,10 @@ In other words, all rows must fit on one page.
 
 As result a list of MxObjects of type used in the DataGrid2 is desired. So we have to explicit name the entity type.
 That forces us to make a copy of the JavaScript Action.
-No code changes are required, just the choice of entity type.
+No code changes are required, just the choice of entity type has to be changed.
+
+**Note:**  
+This solution is only recommended with small amounts of data (up to 10.000 rows). For larger amounts of data a server-side solution (Microflow) is a better solution.
 
 ### Configuration of Get Filtered List in Mendix Studio Pro
 
