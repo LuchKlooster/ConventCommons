@@ -7,14 +7,16 @@ Convent Commons for Mendix
 - [**EnumReflection**](#enumreflection) - Unlocks the full potential of enums
 - [**DataGrid2 - Auto-select (first) row**](#datagrid2-auto-select-row)
 - [**DataGrid2 - Get filtered list**](#datagrid2-get-filtered-list)
+- [**"User Memory"**](#user-memory)
 
 ## Quick Implementation Guide
 
 1. Import the ConventCommons.mpk module into your app.
-2. DataGrid2 features can be used out of the box.
+2. DataGrid2 and "User Memory" features can be used out of the box.
 3. To use EnumReflection, add the microflow `ASU_EnumReflection` to your start-up microflow.
 4. Optionally add the page `Enumerations_Overview` to your navigation for insight into reflection data.
 5. You're ready to use the microflows, nanoflows, and Java/JavaScript Actions in the Enumerations folders.
+6. For housekeeping add the microflow DSB_CleanShadowUser to your before shutdown microflow.
 
 ---
 ---
@@ -222,4 +224,22 @@ This solution is only recommended with small amounts of data (up to 10.000 rows)
 - **Parameter:** `datagrid2Name` - as string
 - **Result:** MxObjectList
 - **Prerequisite:** Pagination: Virtual scrolling and a high Page size (e.g., 999999999)
-  
+
+---
+---
+
+## "User Memory"
+
+"User Memory" refers to a set of features that record user choices and selections. This allows users to return to a page and see the exact same display as the last time they visited.
+
+### How does it work
+
+A ShadowUser is created for each visitor using the NF_GetShadowUser nanoflow.This also works for anonymous users.
+
+To record the selection made in a ComboBox, an association is created between the Entity Attribute and the ShadowUser entity.
+
+DataGrid2 and Gallery have a Configuration block on the Personalization tab. Here, we select as Attribute the attribute Configuration from the DataGridConfig entity. This entity is made available via a DataView with the NF_GetDG2Config nanoflow as the data source.
+
+### Housekeeping
+
+Especially if the app has anonymous users, we'll eventually end up with a lot of invalid ShadowUsers. To clean these up, we have the Microflow BSD_CleanShadowUser. By adding this to the before-shutdown microflow, it will automatically clean up when the app is shut down.
