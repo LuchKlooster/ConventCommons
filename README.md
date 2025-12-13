@@ -1,6 +1,6 @@
 # ConventCommons
 
-Convent Commons for Mendix
+Convent Commons for Mendix Ver. 1.1.0
 
 ## Module Content
 
@@ -77,6 +77,20 @@ These entities, attributes, and associations can be used directly—they are nor
   - `EnumName` - Full enum name (module.enumname like system.language)
   - `EnumValue`
 - **Result:** ImageURL associated with `EnumValue`
+
+#### GetNextEnumValue (new in Ver. 1.1.0)
+
+- **Parameters:**
+  - `EnumName` - Full enum name (module.enumname like system.language)
+  - `EnumValue`
+- **Result:** NextEnumValue or if no next, empty string
+
+#### GetPrevEnumValue (new in Ver. 1.1.0)
+
+- **Parameters:**
+  - `EnumName` - Full enum name (module.enumname like system.language)
+  - `EnumValue`
+- **Result:** PrevEnumValue or if no previous, empty string
 
 ### Enum Mutation Functions
 
