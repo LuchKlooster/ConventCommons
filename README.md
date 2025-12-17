@@ -83,14 +83,14 @@ These entities, attributes, and associations can be used directly—they are nor
 - **Parameters:**
   - `EnumName` - Full enum name (module.enumname like system.language)
   - `EnumValue`
-- **Result:** NextEnumValue or if no next, empty string
+- **Result:** NextEnumValue or if no next value, empty string
 
 #### GetPrevEnumValue (new in Ver. 1.1.0)
 
 - **Parameters:**
   - `EnumName` - Full enum name (module.enumname like system.language)
   - `EnumValue`
-- **Result:** PrevEnumValue or if no previous, empty string
+- **Result:** PrevEnumValue or if no previous value, empty string
 
 ### Enum Mutation Functions
 
