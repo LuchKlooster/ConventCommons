@@ -1,27 +1,64 @@
 # ConventCommons
 
-Convent Commons for Mendix Ver. 1.1.0
+Convent Commons for Mendix Ver. 1.2.0
 
 ## Module Content
 
-- [**EnumReflection**](#enumreflection) - Unlocks the full potential of enums
+✅ [**EnumReflection**](#enumreflection) - Unlocks the full potential of enums
+
+✅ [**DataGrid2 - Auto-select (first) row**](#datagrid2-auto-select-row)
+
+✅ [**DataGrid2 - Get filtered list**](#datagrid2-get-filtered-list)
+
+✅ [**"User Memory"**](#user-memory)
+
+✅ [**Mendix Enum Generator**](#mendix-enum-generator)
+
+## Index
+- [**Quick Implementation Guide**](#quick-implementation-guide)
+- [**EnumReflection**](#enumreflection)
+  - [How It Works](#how-it-works)
+  - [Query Functions](#query-functions)
+    - [GetEnumValues](#getenumvalues)
+    - [GetEnumCaption](#getenumcaption)
+    - [GetEnumImageName](#getenumimagename)
+    - [GetEnumImage](#getenumimage)
+    - [GetEnumImageURL](#getenumimageurl)
+    - [GetNextEnumValue](#getnextmxobjectenumvalue)
+    - [GetNextMxObjectEnumValue](#getnextenumvalue)
+    - [GetPrevEnumValue](#getprevenumvalue)
+    - [GetPrevMxObjectEnumValue](#getprevmxobjectenumvalue)
+  - [Enum Mutation Functions](#enum-mutation-functions)
+    - [NameToEnum](#nametoenum)
+    - [CaptionToEnum](#captiontoenum)
 - [**DataGrid2 - Auto-select (first) row**](#datagrid2-auto-select-row)
-- [**DataGrid2 - Get filtered list**](#datagrid2-get-filtered-list)
+  - [Overview](#overview)
+  - [The Challenge](#the-challenge)
+  - [Solution Architecture](#solution-architecture)
+  - [DataGrid2 Selection: How It Works](#datagrid2-selection-how-it-works)
+  - [Configuration of Auto-Select Row in Mendix Studio Pro](#configuration-of-auto-select-row-in-mendix-studio-pro)
+  - [Use Cases](#use-cases)
+- [**DataGrid2 - Get Filtered List**](#datagrid2-get-filtered-list)
+  - [Configuration of Get Filtered List in Mendix Studio Pro](#configuration-of-get-filtered-list-in-mendix-studio-pro)
+  - [JS_DG2_GetFilteredList](#js_dg2_getfilteredlist)
 - [**"User Memory"**](#user-memory)
+  - [How does it work](#how-does-it-work)
+  - [Housekeeping](#housekeeping)
+- [**Mendix Enum Generator**](#mendix-enum-generator)
 
 ## Quick Implementation Guide
 
 1. Import the ConventCommons.mpk module into your app.
 2. DataGrid2 and "User Memory" features can be used out of the box.
 3. To use EnumReflection, add the microflow `ASU_EnumReflection` to your start-up microflow.
-4. Optionally add the page `Enumerations_Overview` to your navigation for insight into reflection data.
+4. Optionally add the page 'Enumerations_Overview' to your navigation for insight into reflection data.
 5. You're ready to use the microflows, nanoflows, and Java/JavaScript Actions in the Enumerations folders.
-6. For housekeeping add the microflow DSB_CleanShadowUser to your before shutdown microflow.
+6. For housekeeping add the microflow `DSB_CleanShadowUser` to your before shutdown microflow.
 
 ---
 ---
 
-## EnumReflection
+## ✅EnumReflection
 
 Over the years, questions about enumerations have regularly appeared on the forum, along with answers providing partial solutions:
 
@@ -78,19 +115,32 @@ These entities, attributes, and associations can be used directly—they are nor
   - `EnumValue`
 - **Result:** ImageURL associated with `EnumValue`
 
-#### GetNextEnumValue (new in Ver. 1.1.0)
+#### GetNextEnumValue
 
 - **Parameters:**
   - `EnumName` - Full enum name (module.enumname like system.language)
   - `EnumValue`
 - **Result:** NextEnumValue or if no next value, empty string
 
-#### GetPrevEnumValue (new in Ver. 1.1.0)
+#### GetNextMxObjectEnumValue (new in Ver. 1.2.0)
 
 - **Parameters:**
   - `EnumName` - Full enum name (module.enumname like system.language)
   - `EnumValue`
+- **Result:** Next_MxObjectEnumValue or if no next value, empty object
+
+#### GetPrevEnumValue
+- **Parameters:**
+  - `EnumName` - Full enum name (module.enumname like system.language)
+  - `EnumValue`
 - **Result:** PrevEnumValue or if no previous value, empty string
+
+#### GetPrevMxObjectEnumValue (new in Ver. 1.2.0)
+
+- **Parameters:**
+  - `EnumName` - Full enum name (module.enumname like system.language)
+  - `EnumValue`
+- **Result:** Prev_MxObjectEnumValue or if no previous value, empty object
 
 ### Enum Mutation Functions
 
@@ -257,3 +307,16 @@ DataGrid2 and Gallery have a Configuration block on the Personalization tab. Her
 ### Housekeeping
 
 Especially if the app has anonymous users, we'll eventually end up with a lot of invalid ShadowUsers. To clean these up, we have the Microflow BSD_CleanShadowUser. By adding this to the before-shutdown microflow, it will automatically clean up when the app is shut down.
+
+## Mendix Enumeration Generator
+
+Generate Mendix SDK TypeScript code to create enumerations from CSV files, and export existing enumerations back to CSV format.
+
+## Features
+
+✅ [**Import**](#import-enumerations): Create Mendix enumerations from CSV files  
+✅ [**Export**](#exporting-enumerations-from-mendix): Extract existing enumerations from Mendix projects to CSV  
+✅ **Multi-language**: Support for multiple translations per enumeration value  
+✅ [**Round-trip**](#round-trip-workflow): Export from one project, modify, and import to another
+
+See github [**Mendix Enumeration Generator**](https://github.com/LuchKlooster/MendixEnumerationGenerator) for details and scripts.
