@@ -12,7 +12,7 @@ Convent Commons for Mendix Ver. 1.2.0
 
 ✅ [**"User Memory"**](#user-memory)
 
-✅ [**Mendix Enum Generator**](#mendix-enum-generator)
+✅ [**Mendix Enumeration Generator**](#mendix-enumeration-generator)
 
 ## Index
 - [**Quick Implementation Guide**](#quick-implementation-guide)
@@ -44,7 +44,7 @@ Convent Commons for Mendix Ver. 1.2.0
 - [**"User Memory"**](#user-memory)
   - [How does it work](#how-does-it-work)
   - [Housekeeping](#housekeeping)
-- [**Mendix Enum Generator**](#mendix-enum-generator)
+- [**Mendix Enumeration Generator**](#mendix-enumeration-generator)
 
 ## Quick Implementation Guide
 
