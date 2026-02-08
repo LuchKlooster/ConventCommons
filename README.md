@@ -1,60 +1,80 @@
 # ConventCommons
 
-Convent Commons for Mendix Ver. 1.3.0
-
+Convent Commons for Mendix Ver. 1.3.2
 
 ## Module Content
 
-✅ [**EnumReflection**](#enumreflection) - Unlocks the full potential of enums
+- [x] [**EnumReflection**](#enumreflection) - Unlocks the full potential of enums **Updated
 
-✅ [**DataGrid2 - Auto-select (first) row**](#datagrid2-auto-select-row)
+- [x] [**DataGrid2 - Auto-select (first) row**](#datagrid2-auto-select-first-row) **Updated
 
-✅ [**DataGrid2 - Get filtered list**](#datagrid2-get-filtered-list)  **Updated!
+- [x] [**Gallery - Auto-select (first) row**](#gallery-auto-select-first-row)
 
-✅ [**"User Memory"**](#user-memory)
+- [x] [**DataGrid2 - Get filtered list**](#datagrid2-get-filtered-list)
 
-✅ [**Mendix Enumeration Generator**](#mendix-enumeration-generator)
+- [x] [**"User Memory"**](#user-memory)
 
-✅ [**Mendix Navigation Extractor**](#mendix-navigation-extractor)  **New!
+- [x] [**Mendix Enumeration Generator**](#mendix-enumeration-generator)
 
-✅ [**Mendix Navigation CSV Import/Update**](#mendix-navigation-csv-import/update)  **New!
+- [x] [**Mendix Navigation Extractor**](#mendix-navigation-extractor)
 
+- [x] [**Mendix Navigation CSV Import/Update**](#mendix-navigation-csv-importupdate)
 
 ## Index
-- [**Quick Implementation Guide**](#quick-implementation-guide)
-- [**EnumReflection**](#enumreflection)
-  - [How It Works](#how-it-works)
-  - [Query Functions](#query-functions)
-    - [GetEnumValues](#getenumvalues)
-    - [GetEnumCaption](#getenumcaption)
-    - [GetEnumImageName](#getenumimagename)
-    - [GetEnumImage](#getenumimage)
-    - [GetEnumImageURL](#getenumimageurl)
-    - [GetNextEnumValue](#getnextmxobjectenumvalue)
-    - [GetNextMxObjectEnumValue](#getnextenumvalue)
-    - [GetPrevEnumValue](#getprevenumvalue)
-    - [GetPrevMxObjectEnumValue](#getprevmxobjectenumvalue)
-  - [Enum Mutation Functions](#enum-mutation-functions)
-    - [NameToEnum](#nametoenum)
-    - [CaptionToEnum](#captiontoenum)
-- [**DataGrid2 - Auto-select (first) row**](#datagrid2-auto-select-row)
-  - [Overview](#overview)
-  - [The Challenge](#the-challenge)
-  - [Solution Architecture](#solution-architecture)
-  - [DataGrid2 Selection: How It Works](#datagrid2-selection-how-it-works)
-  - [Configuration of Auto-Select Row in Mendix Studio Pro](#configuration-of-auto-select-row-in-mendix-studio-pro)
-  - [Use Cases](#use-cases)
-- [**DataGrid2 - Get Filtered List**](#datagrid2-get-filtered-list)
-  - [Configuration of Get Filtered List in Mendix Studio Pro](#configuration-of-get-filtered-list-in-mendix-studio-pro)
-  - [Method 1](#method-1)
-  - [Method 2](#method-2)
-- [**"User Memory"**](#user-memory)
-  - [How does it work](#how-does-it-work)
-  - [Housekeeping](#housekeeping)
-- [**Mendix Enumeration Generator**](#mendix-enumeration-generator)
-- [**Mendix Navigation Extractor**](#mendix-navigation-extractor)
-- [**Mendix Navigation CSV Import/Update**](#mendix-navigation-csv-import/update)
 
+- [ConventCommons](#conventcommons)
+  - [Module Content](#module-content)
+  - [Index](#index)
+  - [Quick Implementation Guide](#quick-implementation-guide)
+  - [EnumReflection](#enumreflection)
+    - [How It Works](#how-it-works)
+    - [Query Functions](#query-functions)
+      - [GetEnumValues](#getenumvalues)
+      - [GetEnumCaption](#getenumcaption)
+      - [GetEnumImageName](#getenumimagename)
+      - [GetEnumImage](#getenumimage)
+      - [GetEnumImageURL](#getenumimageurl)
+      - [GetNextEnumValue](#getnextenumvalue)
+      - [GetNextMxObjectEnumValue (new in Ver. 1.2.0)](#getnextmxobjectenumvalue-new-in-ver-120)
+      - [GetPrevEnumValue](#getprevenumvalue)
+      - [GetPrevMxObjectEnumValue (new in Ver. 1.2.0)](#getprevmxobjectenumvalue-new-in-ver-120)
+    - [Enum Mutation Functions](#enum-mutation-functions)
+      - [NameToEnum](#nametoenum)
+      - [CaptionToEnum](#captiontoenum)
+    - [Enum Ranking](#enum-ranking)
+      - [Example 1: Administrative process (Onboarding new employee)](#example-1-administrative-process-onboarding-new-employee)
+      - [Example 2: Technical/Production process (Order processing)](#example-2-technicalproduction-process-order-processing)
+      - [Example 3: Research Process (Step-by-Step Plan)](#example-3-research-process-step-by-step-plan)
+      - [Rules](#rules)
+  - [DataGrid2: Auto-Select (First) Row](#datagrid2-auto-select-first-row)
+    - [Overview](#overview)
+    - [The Challenge](#the-challenge)
+    - [Solution Architecture](#solution-architecture)
+    - [DataGrid2 Selection: How It Works](#datagrid2-selection-how-it-works)
+    - [Configuration of Auto-Select Row in Mendix Studio Pro](#configuration-of-auto-select-row-in-mendix-studio-pro)
+      - [Nanoflow: NF\_DG2\_SelectRow](#nanoflow-nf_dg2_selectrow)
+      - [Nanoflow Setup](#nanoflow-setup)
+    - [Use Cases](#use-cases)
+      - [1. Page Load Event](#1-page-load-event)
+      - [2. Master-Detail Grids](#2-master-detail-grids)
+      - [3. Dropdown/Combobox Filtering](#3-dropdowncombobox-filtering)
+  - [Gallery: Auto-Select (First) Row](#gallery-auto-select-first-row)
+  - [DataGrid2: Get Filtered List](#datagrid2-get-filtered-list)
+    - [Configuration of Get Filtered List in Mendix Studio Pro](#configuration-of-get-filtered-list-in-mendix-studio-pro)
+    - [Method 1](#method-1)
+      - [JS\_DG2\_GetFilteredList](#js_dg2_getfilteredlist)
+    - [Method 2](#method-2)
+      - [JA\_DG2\_GetObjectsFromGridConfig / JA\_DG2\_GetObjectsFromGridConfig](#ja_dg2_getobjectsfromgridconfig--ja_dg2_getobjectsfromgridconfig)
+      - [Create Column Mapping](#create-column-mapping)
+      - [When to Use Java vs JavaScript:](#when-to-use-java-vs-javascript)
+  - ["User Memory"](#user-memory)
+    - [How does it work](#how-does-it-work)
+    - [Housekeeping](#housekeeping)
+  - [Mendix Enumeration Generator](#mendix-enumeration-generator)
+    - [Enumeration Generator Features](#enumeration-generator-features)
+  - [Mendix Navigation Extractor](#mendix-navigation-extractor)
+    - [Features](#navigation-extractor-features)
+  - [Mendix Navigation CSV Import/Update](#mendix-navigation-csv-importupdate)
 
 ## Quick Implementation Guide
 
@@ -68,7 +88,6 @@ Convent Commons for Mendix Ver. 1.3.0
 ---
 ---
 
-
 ## EnumReflection
 
 Over the years, questions about enumerations have regularly appeared on the forum, along with answers providing partial solutions:
@@ -81,16 +100,13 @@ Over the years, questions about enumerations have regularly appeared on the foru
 So the (partly)solutions are scattered over a handfull of modules and require high-code alterations.
 I searched for the most low-code solution possible and came up with the idea of EnumReflection.  
 
-
 ### How It Works
 
 In an after start-up microflow (`ASU_EnumReflection`), the JavaAction `CreateMxObjectEnum` is executed. This JavaAction searches the MetaData and stores the found data in the entities `MxObjectEnum`, `MxObjectEnumValue`, and `MxObjectEnumCaption`.
 
 These entities, attributes, and associations can be used directly—they are normal Mendix objects. Convenience microflows and nanoflows are also available to query this data. Additionally, there are Java and JavaScript Actions to modify enum values in an object. For those who want to view the data, there's a page called `Enumerations_Overview`.
 
-
 ### Query Functions
-
 
 #### GetEnumValues
 
@@ -144,6 +160,7 @@ These entities, attributes, and associations can be used directly—they are nor
 - **Result:** Next_MxObjectEnumValue or if no next value, empty object
 
 #### GetPrevEnumValue
+
 - **Parameters:**
   - `EnumName` - Full enum name (module.enumname like system.language)
   - `EnumValue`
@@ -156,9 +173,7 @@ These entities, attributes, and associations can be used directly—they are nor
   - `EnumValue`
 - **Result:** Prev_MxObjectEnumValue or if no previous value, empty object
 
-
 ### Enum Mutation Functions
-
 
 #### NameToEnum
 
@@ -182,22 +197,64 @@ For the Enum Mutation Functions it is necessary to make a copy of the template f
 In the copied function you need to replace the placeholder entity (MxObject System.User) with the entity that has the enum to change as an attribute.
 This is because the Mendix Modeler cannot handle abstract entities, but wants an explicit entity.
 
----
----
+### Enum Ranking
 
+A process step enumeration is a numbered or structured list that represents the sequential actions within a workflow.
+Below are examples in different contexts:
+
+#### Example 1: Administrative process (Onboarding new employee)
+
+- Posting a vacancy: Creating and publishing the vacancy profile.
+- Job interviews: Selecting and interviewing candidates.
+- Contract offer: Drafting and signing the employment contract.
+- Workplace setup: Preparing the laptop, phone, and access card.
+- First day of work: Reception, tour, and introductory program.
+- Evaluation: Discussing performance after 30 days.
+
+#### Example 2: Technical/Production process (Order processing)
+
+- Receiving: The customer order is entered into the system.
+- Validation: The order is checked for availability and correctness.
+- Picking: Products are retrieved from the warehouse.
+- Packaging: Goods are prepared for shipment.
+- Shipping: The package is handed over to the carrier. Invoicing: The invoice is sent automatically.
+
+#### Example 3: Research Process (Step-by-Step Plan)
+
+- Problem Definition: Clearly define the topic.
+- Risk Analysis: Identify potential obstacles.
+- Data Collection: Gather information from relevant sources.
+- Analysis: Process and interpret collected data.
+- Reporting: Record conclusions in a final report.
+
+To support these process step enumerations a set of rules is defined so you can simply ask: If orderstatus above Picking then ....
+
+#### Rules
+
+| Rule | Name | Logic |
+| --- | --- | --- |
+| A above B | AaboveB | A > B |
+| A below B | AbelowB | A < B |
+| A between B and C | AbetweenBandC | A > B and A < C |
+| A equals B | AequalsB | A = B |
+| A greater or equal B | AgeB | A >= B |
+| A greater B | AgreaterB | A > B |
+| A in B and C | AinBandC | A >= B and A <= C |
+| A less or equal B | AleB | A <= B |
+| A smaller B | AsmallerB | A < B |
+
+---
+---
 
 ## DataGrid2: Auto-Select (First) Row
-
 
 ### Overview
 
 A common request in Mendix development is to automatically select the first row in a DataGrid2 after data changes. While the predecessor of DataGrid2 had this functionality built-in, it's notably absent in the current version. ConventCommons provides a JavaScript-based solution to automatically select a row in DataGrid2.
 
-
 ### The Challenge
 
 The main technical challenge is that the clickable class on DataGrid2 rows is not immediately available when the page loads. The class is added asynchronously after the `mx.addOnLoad` function executes, requiring a delayed execution approach.
-
 
 ### Solution Architecture
 
@@ -208,7 +265,6 @@ The solution consists of four components:
 3. **Event Handler** - Trigger mechanism (page load)
 4. **Widgets On Event Handlers** - Trigger mechanism (selection change, etc.)
 
-
 ### DataGrid2 Selection: How It Works
 
 1. **Polling Mechanism:** Checks every 100ms until the gridtable is found
@@ -217,12 +273,13 @@ The solution consists of four components:
 4. **CSS Selectors:** Uses:
    - `.mx-name-{datagrid2Name}` to locate the grid
    - `.widget-datagrid-grid-body` to locate the grid body
+   - `.grid-mock-header` since DataWidget ver 3.8.0 div with class .grid-mock-header is added to grid-body
    - `.tr:nth-child({datagrid2Row})` to locate the row
    - `.clickable` to locate the first clickable element in the row
 
+**Updated: The JavaScriptAction is now compatible with DataWidget up to version 3.8.0
 
 ### Configuration of Auto-Select Row in Mendix Studio Pro
-
 
 #### Nanoflow: NF_DG2_SelectRow
 
@@ -231,18 +288,15 @@ The solution consists of four components:
 | datagrid2Name | String | Name of the DataGrid2 (without "mx-name-" prefix)  |
 | datagrid2Row  | String | Row number to select (typically "1" for first row) |
 
-
 #### Nanoflow Setup
 
-Create a nanoflow named `NF_DG2_SelectRow` that:
+Nanoflow named `NF_DG2_SelectRow` that:
 
 1. Accepts the same parameters as the JavaScript Action
 2. Calls the `JS_DG2_SelectRow` JavaScript Action
 3. Passes through the parameters
 
-
 ### Use Cases
-
 
 #### 1. Page Load Event
 
@@ -256,7 +310,6 @@ Configuration:
   - `datagrid2Name`: Enter grid name (e.g., "myDataGrid")
   - `datagrid2Row`: "1" (or desired row number)
 
-
 #### 2. Master-Detail Grids
 
 When a DataGrid2 listens to another grid (master-detail pattern).
@@ -267,7 +320,6 @@ Configuration:
 - **Event:** On Selection Change
 - **Action:** Call nanoflow `NF_DG2_SelectRow`
 - **Target:** Detail grid name
-
 
 #### 3. Dropdown/Combobox Filtering
 
@@ -283,6 +335,14 @@ Configuration:
 ---
 ---
 
+## Gallery: Auto-Select (First) Row
+
+The Gallery Auto-Select (First) Row is identical to the DataGrid2 Auto-Select Row.
+
+The use of the components is similar to DataGrid; replace DataGrid2 and DG2 with Gallery.
+
+---
+---
 
 ## DataGrid2: Get Filtered List
 
@@ -295,7 +355,6 @@ This is now possible in two solutions using different technics.
 1. using data from the displayed page, **method 1**
 2. via xpath constructed from the configuration of the data grid, **method 2**
 
-
 ### Configuration of Get Filtered List in Mendix Studio Pro
 
 1. Create a copy of the template JavaScriptAction/JavaAction.
@@ -303,7 +362,6 @@ This is now possible in two solutions using different technics.
 3. On the 'Settings'/'General' tab under 'Return', select the entity that is also used in the datagrid.
 4. Call your copy of the JavaScriptAction/JavaAction in your Nanoflow/Microflow where you need the objectlist.
 5. Only for method 2: On the 'Behavior' tab of DataGrid2, set Pagination to 'Virtual scrolling' and Page size to '999999999'.
-
 
 ### Method 1
 
@@ -321,13 +379,11 @@ No code changes are required, just the choice of entity type has to be changed.
 **Note:**  
 This solution is only recommended with small amounts of data (up to 10.000 rows). For larger amounts of data a server-side solution (Method 2 JavaAction) is a better solution.
 
-
 #### JS_DG2_GetFilteredList
 
 - **Parameter:** (string) - `datagrid2Name`
 - **Result:** MxObjectList
 - **Prerequisite:** Pagination: Virtual scrolling and a high Page size (e.g., 999999999)
-
 
 ### Method 2
 
@@ -341,7 +397,6 @@ JavaScript Action `JS_GetObjectsFromGridConfig`.
 The limitation from method 1 don't apply here, so all forms of Pagination can be used with this method.
 This method is suitable for large amounts of data.
 
-
 #### JA_DG2_GetObjectsFromGridConfig / JA_DG2_GetObjectsFromGridConfig
 
 - **Parameters:**
@@ -350,18 +405,19 @@ This method is suitable for large amounts of data.
   - `ColumnMapping`: (String) - JSON mapping of column IDs to attributes
 - **Result:** MxObjectList
 
-
 #### Create Column Mapping
 
 You need to map column IDs (0, 1, 2...) to your attribute names.
 
 **Example:** If your Data Grid 2 has columns:
+
 - Column 0: Name
 - Column 1: Age  
 - Column 2: Status
 - Column 3: CreatedDate
 
 Create this mapping:
+
 ```json
 {
   "0": "Name",
@@ -371,15 +427,17 @@ Create this mapping:
 }
 ```
 
-#### When to Use Java vs JavaScript:
+#### When to Use Java vs JavaScript
 
 **Use JavaAction when:**
+
 - Processing large datasets (thousands of objects)
 - Need server-side security
 - Part of complex server-side logic
 - Need transaction control
 
 **Use JavaScriptAction when:**
+
 - Client-side processing (in nanoflows)
 - Need to run in offline apps
 - Working with UI state
@@ -388,12 +446,9 @@ Create this mapping:
 ---
 ---
 
-
 ## "User Memory"
 
-
 "User Memory" refers to a set of features that record user choices and selections. This allows users to return to a page and see the exact same display as the last time they visited.
-
 
 ### How does it work
 
@@ -403,7 +458,6 @@ To record the selection made in a ComboBox, an association is created between th
 
 DataGrid2 and Gallery have a Configuration block on the Personalization tab. Here, we select as Attribute the attribute Configuration from the DataGridConfig entity. This entity is made available via a DataView with the NF_GetDG2Config nanoflow as the data source.
 
-
 ### Housekeeping
 
 Especially if the app has anonymous users, we'll eventually end up with a lot of invalid ShadowUsers. To clean these up, we have the Microflow BSD_CleanShadowUser. By adding this to the before-shutdown microflow, it will automatically clean up when the app is shut down.
@@ -411,58 +465,49 @@ Especially if the app has anonymous users, we'll eventually end up with a lot of
 ---
 ---
 
-
 ## Mendix Enumeration Generator
-
 
 Generate Mendix SDK TypeScript code to create enumerations from CSV files, and export existing enumerations back to CSV format.
 
+### Enumeration Generator Features
 
-### Features
-
-✅ **Import**: Create Mendix enumerations from CSV files  
-✅ **Export**: Extract existing enumerations from Mendix projects to CSV  
-✅ **Multi-language**: Support for multiple translations per enumeration value  
-✅ **Round-trip**: Export from one project, modify, and import to another
+- [x] **Import**: Create Mendix enumerations from CSV files  
+- [x] **Export**: Extract existing enumerations from Mendix projects to CSV  
+- [x] **Multi-language**: Support for multiple translations per enumeration value  
+- [x] **Round-trip**: Export from one project, modify, and import to another
 
 See github [**Mendix Enumeration Generator**](https://github.com/LuchKlooster/MendixEnumerationGenerator) for details and scripts.
 
 ---
 ---
 
-
 ## Mendix Navigation Extractor
-
 
 This tool extracts all navigation items from a Mendix project using the Mendix Platform SDK and Model SDK, then exports them to a CSV file.
 
+### Navigation Extractor Features {#navigation-extractor-features}
 
-### Features
-
-✅ Extracts navigation from all profiles (Desktop, Tablet, Phone)  
-✅ Captures menu items, sub-menus, and nested navigation structures  
-✅ Menu items have role information reported  
-✅ Exports home pages and role-based home pages  
-✅ Includes icon information and alternative text  
-✅ Preserves navigation hierarchy with level indicators  
-✅ Outputs to clean CSV format  
+- [x] Extracts navigation from all profiles (Desktop, Tablet, Phone)  
+- [x] Captures menu items, sub-menus, and nested navigation structures  
+- [x] Menu items have role information reported  
+- [x] Exports home pages and role-based home pages  
+- [x] Includes icon information and alternative text  
+- [x] Preserves navigation hierarchy with level indicators  
+- [x] Outputs to clean CSV format  
 
 See github [**Mendix Extract Navigation**](https://github.com/LuchKlooster/MendixExtractNavigation) for details and scripts.
 
 ---
 ---
 
-
 ## Mendix Navigation CSV Import/Update
-
 
 You can now **import navigation items from CSV** back into your Mendix project. This allows you to:
 
-
-✅ Create navigation menus from spreadsheets  
-✅ Bulk update navigation items  
-✅ Version control your navigation structure  
-✅ Share navigation configurations between projects  
+- [x] Create navigation menus from spreadsheets  
+- [x] Bulk update navigation items  
+- [x] Version control your navigation structure  
+- [x] Share navigation configurations between projects  
 
 See github [**Mendix Update Navigation**](https://github.com/LuchKlooster/MendixUpdateNavigation) for details and scripts.
 
