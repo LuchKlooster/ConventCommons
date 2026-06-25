@@ -1,16 +1,16 @@
 # ConventCommons
 
-Convent Commons for Mendix Ver. 1.3.2
+Convent Commons for Mendix Ver. 1.4.0
 
 ## Module Content
 
-- [x] [**EnumReflection**](#enumreflection) - Unlocks the full potential of enums **Updated
+- [x] [**EnumReflection**](#enumreflection) - Unlocks the full potential of enums
 
-- [x] [**DataGrid2 - Auto-select (first) row**](#datagrid2-auto-select-first-row) **Updated
+- [x] [**DataGrid2 - Auto-select (first) row**](#datagrid2-auto-select-first-row)
 
 - [x] [**Gallery - Auto-select (first) row**](#gallery-auto-select-first-row)
 
-- [x] [**DataGrid2 - Get filtered list**](#datagrid2-get-filtered-list)
+- [x] [**DataGrid Actions**](#conventcommons--datagrid-actions) **New**
 
 - [x] [**"User Memory"**](#user-memory)
 
@@ -59,22 +59,47 @@ Convent Commons for Mendix Ver. 1.3.2
       - [2. Master-Detail Grids](#2-master-detail-grids)
       - [3. Dropdown/Combobox Filtering](#3-dropdowncombobox-filtering)
   - [Gallery: Auto-Select (First) Row](#gallery-auto-select-first-row)
-  - [DataGrid2: Get Filtered List](#datagrid2-get-filtered-list)
-    - [Configuration of Get Filtered List in Mendix Studio Pro](#configuration-of-get-filtered-list-in-mendix-studio-pro)
-    - [Method 1](#method-1)
-      - [JS\_DG2\_GetFilteredList](#js_dg2_getfilteredlist)
-    - [Method 2](#method-2)
-      - [JA\_DG2\_GetObjectsFromGridConfig / JA\_DG2\_GetObjectsFromGridConfig](#ja_dg2_getobjectsfromgridconfig--ja_dg2_getobjectsfromgridconfig)
+  - [ConventCommons — Datagrid Actions](#conventcommons--datagrid-actions)
+    - [DataGrid 2 (DG2) actions](#datagrid-2-dg2-actions)
+      - [Configuration of Get Filtered List in Mendix Studio Pro](#configuration-of-get-filtered-list-in-mendix-studio-pro)
+      - [JA\_DG2\_GetObjectsFromGridConfig / JS\_DG2\_GetObjectsFromGridConfig](#ja_dg2_getobjectsfromgridconfig--js_dg2_getobjectsfromgridconfig)
       - [Create Column Mapping](#create-column-mapping)
-      - [When to Use Java vs JavaScript:](#when-to-use-java-vs-javascript)
+      - [When to Use Java vs JavaScript](#when-to-use-java-vs-javascript)
+    - [ReactDataGrid (RDG) actions](#reactdatagrid-rdg-actions)
+      - [Config JSON format](#config-json-format)
+      - [JS\_RDG\_BuildXPath / JA\_RDG\_BuildXPath](#js_rdg_buildxpath--ja_rdg_buildxpath)
+      - [JS\_RDG\_BuildSortJSON / JA\_RDG\_BuildSortJSON](#js_rdg_buildsortjson--ja_rdg_buildsortjson)
+      - [JS\_RDG\_GetObjectsFromGridConfig / JA\_RDG\_GetObjectsFromGridConfig](#js_rdg_getobjectsfromgridconfig--ja_rdg_getobjectsfromgridconfig)
+      - [JS\_RDG\_GetFilteredObjects / JA\_RDG\_GetFilteredObjects](#js_rdg_getfilteredobjects--ja_rdg_getfilteredobjects)
+    - [SVARdatagrid (SVAR) actions](#svardatagrid-svar-actions)
+      - [Config JSON format](#config-json-format-1)
+      - [JS\_SVAR\_BuildXPath / JA\_SVAR\_BuildXPath](#js_svar_buildxpath--ja_svar_buildxpath)
+      - [JS\_SVAR\_BuildSortJSON / JA\_SVAR\_BuildSortJSON](#js_svar_buildsortjson--ja_svar_buildsortjson)
+      - [JS\_SVAR\_GetObjectsFromGridConfig / JA\_SVAR\_GetObjectsFromGridConfig](#js_svar_getobjectsfromgridconfig--ja_svar_getobjectsfromgridconfig)
+      - [JS\_SVAR\_GetFilteredObjects / JA\_SVAR\_GetFilteredObjects](#js_svar_getfilteredobjects--ja_svar_getfilteredobjects)
+      - [JA\_SVAR\_ReorderRows](#ja_svar_reorderrows)
+    - [TabulatorDatagrid (TAB) actions](#tabulatordatagrid-tab-actions)
+      - [Config JSON format](#config-json-format-2)
+      - [JS\_TAB\_BuildXPath / JA\_TAB\_BuildXPath](#js_tab_buildxpath--ja_tab_buildxpath)
+      - [JS\_TAB\_BuildSortJSON / JA\_TAB\_BuildSortJSON](#js_tab_buildsortjson--ja_tab_buildsortjson)
+      - [JS\_TAB\_GetObjectsFromGridConfig / JA\_TAB\_GetObjectsFromGridConfig](#js_tab_getobjectsfromgridconfig--ja_tab_getobjectsfromgridconfig)
+      - [JS\_TAB\_GetFilteredObjects / JA\_TAB\_GetFilteredObjects](#js_tab_getfilteredobjects--ja_tab_getfilteredobjects)
+    - [Utility actions](#utility-actions)
+      - [JS\_CurrentUser / JS\_CurrentUserId](#js_currentuser--js_currentuserid)
+      - [JS\_NameToEnum / JA\_NameToEnum](#js_nametoenum--ja_nametoenum)
+      - [JA\_CaptionToEnum](#ja_captiontoenum)
+      - [JA\_GetUserById](#ja_getuserbyid)
+      - [JA\_ReorderRows](#ja_reorderrows)
+    - [Filter operator reference](#filter-operator-reference)
   - ["User Memory"](#user-memory)
     - [How does it work](#how-does-it-work)
     - [Housekeeping](#housekeeping)
   - [Mendix Enumeration Generator](#mendix-enumeration-generator)
     - [Enumeration Generator Features](#enumeration-generator-features)
   - [Mendix Navigation Extractor](#mendix-navigation-extractor)
-    - [Features](#navigation-extractor-features)
+    - [Navigation Extractor Features](#navigation-extractor-features)
   - [Mendix Navigation CSV Import/Update](#mendix-navigation-csv-importupdate)
+  - [License](#license)
 
 ## Quick Implementation Guide
 
@@ -274,10 +299,9 @@ The solution consists of four components:
    - `.mx-name-{datagrid2Name}` to locate the grid
    - `.widget-datagrid-grid-body` to locate the grid body
    - `.grid-mock-header` since DataWidget ver 3.8.0 div with class .grid-mock-header is added to grid-body
-   - `.tr:nth-child({datagrid2Row})` to locate the row
-   - `.clickable` to locate the first clickable element in the row
+   - `.tr:nth-child({datagrid2Row})` to locate the rowlect another row than first row.
 
-**Updated: The JavaScriptAction is now compatible with DataWidget up to version 3.8.0
+**Updated: The JavaScriptAction is now compatible with DataWidget up to version 3.8.0. Mendix also has returned the auto-select first row function in version 3.8.0. You can still use the Convent Commons Auto=select (first) row in older versions or to se
 
 ### Configuration of Auto-Select Row in Mendix Studio Pro
 
@@ -344,63 +368,48 @@ The use of the components is similar to DataGrid; replace DataGrid2 and DG2 with
 ---
 ---
 
-## DataGrid2: Get Filtered List
+## ConventCommons — Datagrid Actions
+
+JavaScript Actions (JSAs) and Java Actions (JAs) that support the **DataGrid2**, **ReactDataGrid**, **SVARdatagrid** and **TabulatorDatagrid** pluggable widgets, plus general-purpose utility actions.
+
+All grid actions read column-to-attribute mappings from the `columnMeta` block embedded in the widget's config JSON — no separate mapping document is required.
+
+---
+---
+### DataGrid 2 (DG2) actions
+
+Actions for the standard Mendix DataGrid 2 widget:
+
+| Action | Parameters | Description |
+| --- | --- | --- |
+| `JS_DG2_BuildXPath` | `entityName`, `filterJSON` | Builds an XPath string from a DataGrid 2 filter JSON |
+| `JA_DG2_BuildXPath` | `EntityName`, `FilterJSON` | Java equivalent |
+| `JS_DG2_GetObjectsFromGridConfig` | `returnObjectType`, `gridConfigJSON` | Retrieves objects from a DG2 config JSON |
+| `JA_DG2_GetObjectsFromGridConfig` | `ReturnObjectType`, `GridConfigJSON` | Java equivalent |
+| `JS_DG2_SelectRow` | `datagrid2Name`, `datagrid2Row` | Programmatically selects a row in DataGrid 2 (see [DataGrid2: Auto-Select (First) Row](#datagrid2-auto-select-first-row)) |
+| `JS_Gallery_SelectRow` | `galleryName`, `galleryRow` | Programmatically selects an item in a Gallery widget |
+
+#### Configuration of Get Filtered List in Mendix Studio Pro
 
 When a microflow or nanoflow is called via a button in a datagrid, there is only one option to pass data from the grid as a parameter:
  'Selection of >GridName<' - the **selected rows from the grid**.
 
 However, sometimes it's desirable to retrieve not the **selected rows**, but the **filtered data** in the called flow.
-This is now possible in two solutions using different technics.
 
-1. using data from the displayed page, **method 1**
-2. via xpath constructed from the configuration of the data grid, **method 2**
+#### JA_DG2_GetObjectsFromGridConfig / JS_DG2_GetObjectsFromGridConfig
 
-### Configuration of Get Filtered List in Mendix Studio Pro
-
-1. Create a copy of the template JavaScriptAction/JavaAction.
-2. Place the copy in your own module.
-3. On the 'Settings'/'General' tab under 'Return', select the entity that is also used in the datagrid.
-4. Call your copy of the JavaScriptAction/JavaAction in your Nanoflow/Microflow where you need the objectlist.
-5. Only for method 2: On the 'Behavior' tab of DataGrid2, set Pagination to 'Virtual scrolling' and Page size to '999999999'.
-
-### Method 1
-
-JavaScript Action `JS_DG2_GetFilteredList`.
-
-**Important Limitation:**  
-In the client, only data from the displayed page is available.
-This limitation can be circumvented by setting Pagination to 'Virtual scrolling' and making the page length larger than the expected number of rows.
-In other words, all rows must fit on one page.
-
-As result a list of MxObjects of type used in the DataGrid2 is desired. So we have to explicit name the entity type.
-That forces us to make a copy of the JavaScript Action.
-No code changes are required, just the choice of entity type has to be changed.
-
-**Note:**  
-This solution is only recommended with small amounts of data (up to 10.000 rows). For larger amounts of data a server-side solution (Method 2 JavaAction) is a better solution.
-
-#### JS_DG2_GetFilteredList
-
-- **Parameter:** (string) - `datagrid2Name`
-- **Result:** MxObjectList
-- **Prerequisite:** Pagination: Virtual scrolling and a high Page size (e.g., 999999999)
-
-### Method 2
-
-This approach, available as JavaAction and as JavascriptAction,  reads the stored DataGrid2 configuration JSON to automatically apply the same filters and sorting that the user sees in the grid.
+This solution, available as JavaAction and as JavascriptAction, reads the stored DataGrid2 configuration JSON to automatically apply the same filters and sorting that the user sees in the grid.
 
 JavaAction `JA_DG2_GetObjectsFromGridConfig`
 
-JavaScript Action `JS_GetObjectsFromGridConfig`.
+JavaScript Action `JS_DG2_GetObjectsFromGridConfig`.
 
 **No Limitations:**
-The limitation from method 1 don't apply here, so all forms of Pagination can be used with this method.
+All forms of Pagination can be used with this method.
 This method is suitable for large amounts of data.
 
-#### JA_DG2_GetObjectsFromGridConfig / JA_DG2_GetObjectsFromGridConfig
-
 - **Parameters:**
-  - `EntityName`: (String) - Enter entity name (e.g., "System.User")
+  - `Return object type`: (entity) - Select the entity that is used in DG2 Data source
   - `GridConfigJSON`: (String) - The Data Grid 2 configuration JSON (e.g $DataGridConfig_NP/Configuration)
   - `ColumnMapping`: (String) - JSON mapping of column IDs to attributes
 - **Result:** MxObjectList
@@ -442,6 +451,283 @@ Create this mapping:
 - Need to run in offline apps
 - Working with UI state
 - Lighter, simpler operations
+
+---
+---
+
+### ReactDataGrid (RDG) actions
+
+#### Config JSON format
+
+```json
+{
+  "sortColumns":   [{ "columnKey": "13", "direction": "ASC" }],
+  "filters":       { "13": "<|5", "17": "invoice" },
+  "filtersVisible": true,
+  "columnOrder":   ["6","7","8","13","17"],
+  "hiddenColumns": ["8"],
+  "columnMeta": {
+    "13": { "xpathName": "Completion",           "type": "Integer" },
+    "17": { "xpathName": "Enum_Transactiontype", "type": "Enum"    }
+  }
+}
+```
+
+Both `filters` keys and `columnMeta` keys use the **stable numeric suffix** of the Mendix attribute ID (e.g. `attr_jge_13` → `"13"`). Filter values use the `op|value` pipe format (e.g. `"<|5"`, `"contains|smith"`); Enum and Boolean values are stored plain (`"invoice"`, `"true"`).
+
+---
+---
+
+#### JS_RDG_BuildXPath / JA_RDG_BuildXPath
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `entityName` / `EntityName` | String | Full entity name, e.g. `MyModule.MyEntity` |
+| `gridConfigJSON` / `GridConfigJSON` | String | Value of the widget's **Configuration attribute** |
+| `returnFullXPath` / `ReturnFullXPath` | Boolean | `true` → `//Entity[constraints]`; `false` → `[constraints]` only |
+
+Returns a String. Set `returnFullXPath = false` for the **XPath Marketplace module** which expects only the constraint part.
+
+---
+---
+
+#### JS_RDG_BuildSortJSON / JA_RDG_BuildSortJSON
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `gridConfigJSON` / `GridConfigJSON` | String | Value of the widget's **Configuration attribute** |
+
+Returns a JSON string, e.g. `[["Completion","asc"],["Name","desc"]]`. Returns `[]` when no sort is active.
+
+---
+---
+
+#### JS_RDG_GetObjectsFromGridConfig / JA_RDG_GetObjectsFromGridConfig
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `returnObjectType` / `ReturnObjectType` | String | Full entity name, e.g. `MyModule.MyEntity` |
+| `gridConfigJSON` / `GridConfigJSON` | String | Value of the widget's **Configuration attribute** |
+
+Retrieves objects applying both filter constraints and sort order in one call. Returns `List<MxObject>`. The JS variant requires **Strict mode = No** in App Security.
+
+---
+---
+
+#### JS_RDG_GetFilteredObjects / JA_RDG_GetFilteredObjects
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `returnObjectType` / `ReturnObjectType` | String | Full entity name, e.g. `MyModule.MyEntity` |
+| `xPathConstraint` / `XPathConstraint` | String | XPath constraint string, e.g. output of `JS_RDG_BuildXPath` (may be empty) |
+
+Retrieves objects using a plain XPath constraint. Empty string returns all objects. The JS variant requires **Strict mode = No** in App Security.
+
+---
+---
+
+### SVARdatagrid (SVAR) actions
+
+#### Config JSON format
+
+```json
+{
+  "filtersVisible": true,
+  "hiddenColumns":  ["attr_aad_14"],
+  "columnWidths":   { "13": 150 },
+  "sortState":      { "13": { "order": "asc", "index": 0 } },
+  "filters":        { "attr_aad_13": "contains|smith", "attr_aad_14": ">=|100" },
+  "columnMeta":     { "13": { "xpathName": "Name", "type": "String" } }
+}
+```
+
+- **`filters` keys** are raw Mendix attribute IDs (e.g. `attr_aad_13`). Actions convert these to stable keys via `getStableKey()` before looking up `columnMeta`.
+- **`sortState`, `columnMeta`, `hiddenColumns`, `columnWidths` keys** use the stable numeric suffix (e.g. `"13"`).
+- **Filter values** use the `op|value` pipe format, e.g. `"contains|smith"`, `">=|100"`, `"<|50"`.
+
+---
+---
+
+#### JS_SVAR_BuildXPath / JA_SVAR_BuildXPath
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `entityName` / `EntityName` | String | Full entity name, e.g. `MyModule.MyEntity` |
+| `gridConfigJSON` / `GridConfigJSON` | String | Value of the widget's **Configuration attribute** |
+| `returnFullXPath` / `ReturnFullXPath` | Boolean | `true` → `//Entity[constraints]`; `false` → `[constraints]` only |
+
+Returns a String.
+
+---
+---
+
+#### JS_SVAR_BuildSortJSON / JA_SVAR_BuildSortJSON
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `gridConfigJSON` / `GridConfigJSON` | String | Value of the widget's **Configuration attribute** |
+
+Returns a JSON sort array based on `sortState`, e.g. `[["Name","asc"],["Amount","desc"]]`. Returns `[]` when no sort is active.
+
+---
+---
+
+#### JS_SVAR_GetObjectsFromGridConfig / JA_SVAR_GetObjectsFromGridConfig
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `returnObjectType` / `ReturnObjectType` | String | Full entity name, e.g. `MyModule.MyEntity` |
+| `gridConfigJSON` / `GridConfigJSON` | String | Value of the widget's **Configuration attribute** |
+
+Retrieves objects applying filters and multi-column sort order. Returns `List<MxObject>`. The JS variant requires **Strict mode = No** in App Security.
+
+---
+---
+
+#### JS_SVAR_GetFilteredObjects / JA_SVAR_GetFilteredObjects
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `returnObjectType` / `ReturnObjectType` | String | Full entity name, e.g. `MyModule.MyEntity` |
+| `xPathConstraint` / `XPathConstraint` | String | XPath constraint string **or** full grid config JSON |
+
+When `xPathConstraint` starts with `{` it is parsed as a SVAR grid config JSON and the XPath predicate is extracted automatically. Otherwise used as a plain XPath constraint. Empty string returns all objects.
+
+---
+---
+
+#### JA_SVAR_ReorderRows
+
+Renumbers a sort-order attribute after a drag-and-drop row reorder.
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `ObjectType` | String | Full entity name, e.g. `MyModule.MyEntity` |
+| `SortAttribute` | String | Name of the Integer/Long sort-order attribute, e.g. `SortOrder` |
+| `MovedObject` | IMendixObject | The object that was dragged |
+| `SuccessorId` | String | Mendix ID string of the row now directly below the moved row; empty = moved to the last position |
+| `XPathConstraint` | String | Optional XPath constraint to limit the reorder scope, e.g. `[MyAssoc = '[%CurrentObject%]']` |
+
+Returns `Boolean` (`true` on success). Renumbers all objects in scope in steps of 10, commits only changed objects.
+
+---
+---
+
+### TabulatorDatagrid (TAB) actions
+
+#### Config JSON format
+
+```json
+{
+  "sorters":    [{ "field": "attr_aad_6", "dir": "asc" }],
+  "filters":    [{ "field": "attr_aad_6", "type": "<", "value": 100 }],
+  "colLayout":  [{ "field": "attr_aad_6", "title": "ID", "width": 150, "visible": true }],
+  "columnMeta": {
+    "attr_aad_6":  { "xpathName": "ID_1",  "type": "Integer" },
+    "attr_aad_7":  { "xpathName": "Task",  "type": "String"  },
+    "attr_aad_16": { "xpathName": "Budget","type": "Decimal" }
+  }
+}
+```
+
+All keys (`filters[].field`, `sorters[].field`, `columnMeta` keys) use the raw Mendix attribute ID (e.g. `attr_aad_6`). No stable key conversion is needed — the keys match directly. The `type` field uses Tabulator's built-in filter operators: `=`, `!=`, `<`, `<=`, `>`, `>=`, `like`, `starts`, `ends`, `keywords`.
+
+---
+---
+
+#### JS_TAB_BuildXPath / JA_TAB_BuildXPath
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `entityName` / `EntityName` | String | Full entity name, e.g. `MyModule.MyEntity` |
+| `gridConfigJSON` / `GridConfigJSON` | String | Value of the widget's **Configuration attribute** |
+| `returnFullXPath` / `ReturnFullXPath` | Boolean | `true` → `//Entity[constraints]`; `false` → `[constraints]` only |
+
+Returns a String.
+
+---
+---
+
+#### JS_TAB_BuildSortJSON / JA_TAB_BuildSortJSON
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `gridConfigJSON` / `GridConfigJSON` | String | Value of the widget's **Configuration attribute** |
+
+Returns a JSON sort array based on `sorters`, e.g. `[["ID_1","asc"]]`. Returns `[]` when no sort is active.
+
+---
+---
+
+#### JS_TAB_GetObjectsFromGridConfig / JA_TAB_GetObjectsFromGridConfig
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `returnObjectType` / `ReturnObjectType` | String | Full entity name, e.g. `MyModule.MyEntity` |
+| `gridConfigJSON` / `GridConfigJSON` | String | Value of the widget's **Configuration attribute** |
+
+Retrieves objects applying filters and sort order from the grid configuration. Returns `List<MxObject>`. The JS variant requires **Strict mode = No** in App Security.
+
+---
+---
+
+#### JS_TAB_GetFilteredObjects / JA_TAB_GetFilteredObjects
+
+| Parameter | Type | Description |
+| --- | --- | --- |
+| `returnObjectType` / `ReturnObjectType` | String | Full entity name, e.g. `MyModule.MyEntity` |
+| `xPathConstraint` / `XPathConstraint` | String | XPath constraint string **or** full grid config JSON |
+
+When `xPathConstraint` starts with `{` it is parsed as a TAB grid config JSON and the XPath predicate is built from the `filters` array and `columnMeta`. Otherwise used as a plain XPath constraint. Empty string returns all objects.
+
+---
+---
+
+### Utility actions
+
+#### JS_CurrentUser / JS_CurrentUserId
+
+Returns the current logged-in user object or user ID.
+
+#### JS_NameToEnum / JA_NameToEnum
+
+Converts a String value to an Enum member. Useful in nanoflows/microflows where you need to construct an enum value dynamically.
+
+#### JA_CaptionToEnum
+
+Converts a localized enum caption back to the enum key. Useful when processing user-visible labels from a list.
+
+#### JA_GetUserById
+
+Retrieves a System.User object by its ID string.
+
+#### JA_ReorderRows
+
+Generic row reorder action (not tied to a specific widget). Renumbers a sort-order attribute for a given entity type after a drag-and-drop operation.
+
+---
+---
+
+### Filter operator reference
+
+All three grid widgets (RDG, SVAR, TAB) produce XPath via the same helper logic:
+
+| Operator | Attribute type | XPath produced |
+| --- | --- | --- |
+| `=` | Integer/Decimal | `Attr = 100` |
+| `<` | Integer/Decimal | `Attr < 100` |
+| `<=` | Integer/Decimal | `Attr <= 100` |
+| `>` | Integer/Decimal | `Attr > 100` |
+| `>=` | Integer/Decimal | `Attr >= 100` |
+| `!=` | Integer/Decimal | `Attr != 100` |
+| `=` | Enum | `Attr = 'value'` |
+| `=` | Boolean | `Attr = true()` |
+| `contains` / `like` | String | `contains(Attr, 'value')` |
+| `startsWith` / `starts` | String | `starts-with(Attr, 'value')` |
+| `endsWith` / `ends` | String | `contains(Attr, 'value')` |
+| `keywords` | String | `contains(Attr, 'w1') and contains(Attr, 'w2')` |
+| `=` | DateTime | `Attr = dateTime('2024-01-01T00:00:00')` |
+| `<` | DateTime | `Attr < dateTime('2024-01-01T00:00:00')` |
 
 ---
 ---
@@ -513,3 +799,7 @@ See github [**Mendix Update Navigation**](https://github.com/LuchKlooster/Mendix
 
 ---
 ---
+
+## License
+
+Apache V2 – ConventSystems B.V.
